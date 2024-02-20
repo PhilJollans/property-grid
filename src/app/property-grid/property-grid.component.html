@@ -1,0 +1,108 @@
+<div class="property-grid" [ngClass]="!isInternal && !cardStyle ? 'property-grid-border': null" [style.width]="width">
+  <div [ngClass]="cardStyle ? 'card' : null">
+    <table class="property-grid-table" [style.width]="width">
+      <tbody>
+      <ng-container *ngFor="let group of groups">
+        <tr *ngIf="group.name">
+          <td colspan="2" class="property-grid-group" (click)="groupCollapse && group.toggle()">{{group.name}}</td>
+        </tr>
+
+        <ng-container *ngFor="let item of group.items">
+          <ng-container *ngIf="!hidden(item)">
+            <tr *ngIf="group.state">
+              <td [attr.colspan]="item.colSpan2 == true ? 2 : 1"
+                  class="property-grid-label"
+                  [style.cursor]="item.link ? 'pointer' : null"
+                  (click)="openLink(item.link)">
+                {{item.name}}
+                <span *ngIf="showHelp && item.showHelp && item.description" [title]="item.description">[?]</span>
+              </td>
+              <ng-container *ngIf="!item.colSpan2">
+                <ng-container
+                  *ngTemplateOutlet="controlTemplate; context: {$implicit: item}">
+                </ng-container>
+              </ng-container>
+            </tr>
+            <tr *ngIf="group.state && item.colSpan2">
+              <ng-container *ngTemplateOutlet="controlTemplate; context: {$implicit: item}"></ng-container>
+            </tr>
+          </ng-container>
+        </ng-container>
+      </ng-container>
+      </tbody>
+    </table>
+  </div>
+
+  <div *ngFor="let item of subItems" class="internal-property-grid" [ngClass]="cardStyle ? 'card' : null">
+    <ng-container *ngIf="!hidden(item)">
+
+      <div (click)="pg.toggle()" class="property-grid-header"
+           [ngClass]="cardStyle ? null : 'property-grid-header-margin'">
+        <b>{{item.name}}</b>
+      </div>
+      <ngx-property-grid
+        [showHelp]="showHelp"
+        [collapse]="item.collapse"
+        [@collapseAnimation]="pg.collapse ? 'hidden' : 'visible' "
+        [options]="options[item.key]"
+        [width]="width"
+        [labelWidth]="labelWidth"
+        [templateMap]="templateMap"
+        style="display: block;overflow: hidden"
+        #pg>
+      </ngx-property-grid>
+    </ng-container>
+  </div>
+</div>
+
+
+<ng-template #controlTemplate let-item>
+  <td [ngSwitch]="controlType(item)" [attr.colspan]="$any(item).colSpan2 == true ? 2 : 1" class="property-grid-control">
+    <ng-container *ngSwitchCase="'template'">
+      <ng-container *ngTemplateOutlet="getTemplate($any(item).type); context: {$implicit: propertyValue(item)}">
+      </ng-container>
+    </ng-container>
+
+    <ng-container
+      *ngSwitchCase="'dynamicComponent'"
+      [dynamicComponentLoad]="item"
+      [options]="options">
+    </ng-container>
+
+    <span *ngSwitchCase="'templateNotFound'">
+      {{item.type}} template Not Found
+    </span>
+  </td>
+</ng-template>
+
+
+<ng-container *ngIf="!isInternal">
+
+  <ng-template ngxTemplate="checkbox" let-p>
+    <input type="checkbox" [(ngModel)]="$any(p).value"/>
+  </ng-template>
+
+  <ng-template ngxTemplate="color" let-p>
+    <input type="color" [(ngModel)]="$any(p).value"/>
+  </ng-template>
+
+  <ng-template ngxTemplate="date" let-p>
+    <input type="date" [(ngModel)]="$any(p).value"/>
+  </ng-template>
+
+  <ng-template ngxTemplate="label" let-p>
+    <label>{{$any(p).value}}</label>
+  </ng-template>
+
+  <ng-template ngxTemplate="text" let-p>
+    <input type="text" [(ngModel)]="$any(p).value"/>
+  </ng-template>
+
+  <ng-template ngxTemplate="options" let-p>
+    <select [(ngModel)]="$any(p).value">
+      <option [value]="optionValue(option)" *ngFor="let option of $any(p).options">
+        {{optionLabel(option)}}
+      </option>
+    </select>
+  </ng-template>
+</ng-container>

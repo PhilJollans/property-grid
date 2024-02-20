@@ -1,0 +1,34 @@
+<div>
+  <h1 style="text-align: center">Property Grid Example</h1>
+  <div style="display: flex; flex-direction: row">
+
+      <ngx-property-grid [width]="'400px'" [options]="student" [showHelp]="true" [groupCollapse]="true" [cardStyle]="student.editor.cardStyle">
+          <ng-template ngxTemplate="text" let-p>
+              <input type="text" [value]="p.value" (change)="p.value = $event.target.value" [disabled]="p.meta?.additional?.disabled">
+          </ng-template>
+          <ng-template ngxTemplate="fontSize" let-pp>
+              <input matInput type="number" placeholder="Value" [(ngModel)]="pp.value">
+              <!--<span>字体大小</span>-->
+          </ng-template>
+
+          <ng-template ngxTemplate="date" let-p>
+              <input matInput [matDatepicker]="picker" placeholder="Choose a date" [(ngModel)]="p.value">
+              <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+              <mat-datepicker #picker></mat-datepicker>
+          </ng-template>
+
+          <ng-template ngxTemplate="sex" let-p>
+              <mat-radio-group  [(ngModel)]="p.value">
+                  <mat-radio-button value="male">male</mat-radio-button>
+                  <mat-radio-button value="female">female</mat-radio-button>
+              </mat-radio-group>
+          </ng-template>
+      </ngx-property-grid>
+
+      <div style="margin-left: 50px; flex: 1">
+          <div> <h3>The Object：</h3> </div>
+        <ngx-json-viewer [json]="data"  [depth]="1"></ngx-json-viewer>
+      </div>
+  </div>
+
+</div>
