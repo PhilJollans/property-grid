@@ -11,6 +11,7 @@ import { NgxJsonViewerModule } from 'ngx-json-viewer';
 import { FormsModule } from '@angular/forms';
 import { meta } from './property-item-meta';
 import { IDynamicComponent } from './dynamic-component';
+import { SimpleTextEditorComponent } from './simple-text-editor/simple-text-editor.component';
 
 @Component({
   selector: 'app-root',
@@ -41,17 +42,14 @@ export class AppComponent {
   }
 
   text: string = '';
+
+  onInputChange(event: Event, p: any): void {
+    if (event.target instanceof HTMLInputElement) {
+      p.value = event.target.value;
+    }
+  }
 }
 
-
-@Component({
-  selector: 'app-text-editor',
-  template: `<input type="text" [value]="value" (change)="valueChange.emit($event.target.value)"/>`
-})
-export class SimpleTextEditorComponent implements IDynamicComponent<string> {
-  value : string = '' ;
-  valueChange: EventEmitter<string> = new EventEmitter<string>();
-}
 
 export class ExampleEditorOptions {
   @meta({
@@ -110,6 +108,14 @@ export class ExampleStudentOptions {
   @meta({name: 'Gender', group: 'Basic Information', type: 'sex', order: 3})
   gender = 'male';
 
-  @meta({name: 'Editor Preference', type: 'subItems', collapse: true, hidden: (s: ExampleStudentOptions) => s.gender === 'male' })
+  @meta({
+    name: 'Editor Preference',
+    type: 'subItems',
+    collapse: true,
+    hidden: (obj: unknown) => {
+      const s = obj as ExampleStudentOptions;
+      return s && s.gender === 'male';
+    }
+  })
   editor: ExampleEditorOptions = new ExampleEditorOptions();
 }

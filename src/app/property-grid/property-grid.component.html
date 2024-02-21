@@ -44,7 +44,7 @@
         [showHelp]="showHelp"
         [collapse]="item.collapse"
         [@collapseAnimation]="pg.collapse ? 'hidden' : 'visible' "
-        [options]="options[item.key]"
+        [options]="item.key && options[item.key]"
         [width]="width"
         [labelWidth]="labelWidth"
         [templateMap]="templateMap"

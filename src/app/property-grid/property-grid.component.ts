@@ -4,11 +4,17 @@ import { NgxTemplate } from '../template.directive';
 import { PropertyItemMeta } from '../property-item-meta';
 import { PropertyValue } from '../property-value';
 import { FormsModule } from '@angular/forms';
+import { CommonModule } from '@angular/common';
+import { DynamicComponentLoadDirective } from '../dynamic-component-load.directive';
 
 @Component({
   selector: 'ngx-property-grid',
   standalone: true,
-  imports: [FormsModule],
+  imports: [
+    FormsModule,
+    CommonModule,
+    DynamicComponentLoadDirective,
+  ],
   templateUrl: './property-grid.component.html',
   styleUrl: './property-grid.component.scss'
 })
@@ -26,7 +32,7 @@ export class PropertyGridComponent implements AfterContentInit, AfterViewInit {
   public templateMap! : { [key: string]: TemplateRef<any> };
 
   @Input()
-  public collapse = true;
+  public collapse : boolean | undefined = true;
 
   @Input()
   width! : string | number;
@@ -104,17 +110,18 @@ export class PropertyGridComponent implements AfterContentInit, AfterViewInit {
     }
   }
 
-  public openLink(link: string) {
+  public openLink(link: string|undefined) {
     if (link) {
       window.open(link, '_blank');
     }
   }
 
-  public getTemplate(type: string): TemplateRef<any> | undefined {
+  public getTemplate(type: string): TemplateRef<any> | null
+  {
     if (typeof type === 'string' && this.templateMap) {
       return type ? this.templateMap[type] : this.templateMap['default'];
     } else {
-      return undefined;
+      return null;
     }
   }
 
