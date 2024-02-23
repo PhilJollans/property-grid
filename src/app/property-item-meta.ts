@@ -21,6 +21,8 @@ export interface PropertyItemMeta {
   showHelp?: boolean; // default True.
   link?: string; // help link
   additional?: any; // additional data you can pass to the property
+  // For CS4 
+  dimension?: string;
 }
 
 

@@ -10,8 +10,9 @@ import { MatSlideToggle, MatSlideToggleModule } from '@angular/material/slide-to
 import { NgxJsonViewerModule } from 'ngx-json-viewer';
 import { FormsModule } from '@angular/forms';
 import { meta } from './property-item-meta';
-import { IDynamicComponent } from './dynamic-component';
 import { SimpleTextEditorComponent } from './simple-text-editor/simple-text-editor.component';
+import { UnitSelectorComponent } from './unit-selector/unit-selector.component';
+import { NgxTemplate } from './template.directive';
 
 @Component({
   selector: 'app-root',
@@ -26,7 +27,8 @@ import { SimpleTextEditorComponent } from './simple-text-editor/simple-text-edit
     MatCheckboxModule,
     MatSlideToggleModule,
     NgxJsonViewerModule,
-    FormsModule
+    FormsModule,
+    NgxTemplate
   ],
   templateUrl: './app.component.html',
   styleUrl: './app.component.scss'
@@ -50,15 +52,20 @@ export class AppComponent {
   }
 }
 
-
 export class ExampleEditorOptions {
+  @meta({ name: 'Default unit for speed', type: UnitSelectorComponent, group: 'Default Units', dimension: 'speed' })
+  defaultUnitForSpeed : string = 'm/s';
+
+  @meta({ name: 'Default unit for acceleration', type: UnitSelectorComponent, group: 'Default Units', dimension: 'acceleration' })
+  defaultUnitForAcceleration : string = 'm/s^2';
+
   @meta({
-      name: 'Font', description: 'The font editor to use', colSpan2: false,
-      type: SimpleTextEditorComponent, group: 'Editor', hidden: false
+    name: 'Font', description: 'The font editor to use', colSpan2: false,
+    type: SimpleTextEditorComponent, group: 'Editor', hidden: false
   })
   font = 'Source Code Pro';
 
-  @meta({name: 'Font size', group: 'Editor', valueConvert: parseInt, type: 'fontSize'})
+@meta({name: 'Font size', group: 'Editor', valueConvert: parseInt, type: 'fontSize'})
   fontSize = 14;
 
   @meta({name: 'Font color', group: 'Editor', type: 'color'})
@@ -83,7 +90,7 @@ export class ExampleEditorOptions {
       description: 'Whether to include any additional framework',
       type: 'options',
       options: ['None', {text: 'AngularJS', value: 'angular'}, {text: 'Backbone.js', value: 'backbone'}]
-  })
+  }) 
   framework = 'None';
 
 }
@@ -98,24 +105,14 @@ export class ExampleStudentOptions {
 
   @meta({name: 'Age', group: 'Basic Information1', valueConvert: parseInt, type: 'text', order: 2})
   age = 19;
-
-  @meta({name: 'Id', group: 'Basic Information1', type: 'text', order: 3, additional: { disabled: true }})
-  id = '123456789';
-
+ 
   @meta({name: 'Telephone', type: 'telephone', group: 'Basic Information1', hidden: true})
   telephone = '';
 
   @meta({name: 'Gender', group: 'Basic Information', type: 'sex', order: 3})
   gender = 'male';
 
-  @meta({
-    name: 'Editor Preference',
-    type: 'subItems',
-    collapse: true,
-    hidden: (obj: unknown) => {
-      const s = obj as ExampleStudentOptions;
-      return s && s.gender === 'male';
-    }
-  })
+  @meta({name: 'Editor Preference', type: 'subItems'})
+
   editor: ExampleEditorOptions = new ExampleEditorOptions();
 }

@@ -72,6 +72,14 @@ export class DynamicComponentLoadDirective implements OnInit, OnDestroy, OnChang
     if (this.meta.options) {
       Object.assign(component.instance, this.meta.options);
     }
+    if ( this.meta.additional !== undefined )
+    {
+      (component.instance as any).additional = this.meta.additional;
+    }
+    if ( this.meta.dimension !== undefined )
+    {
+      (component.instance as any).dimension = this.meta.dimension;
+    }
   }
 
   private destroyComponent(): void {

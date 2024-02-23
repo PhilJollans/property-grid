@@ -14,6 +14,7 @@ import { DynamicComponentLoadDirective } from '../dynamic-component-load.directi
     FormsModule,
     CommonModule,
     DynamicComponentLoadDirective,
+    NgxTemplate,
   ],
   templateUrl: './property-grid.component.html',
   styleUrl: './property-grid.component.scss'

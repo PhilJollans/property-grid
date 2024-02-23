@@ -5,11 +5,11 @@ import { Directive, Input, TemplateRef } from '@angular/core';
   standalone: true
 })
 export class NgxTemplate {
-  @Input() type! : string;
+  @Input() type : string = '' ;
+  @Input('ngxTemplate') name : string = '';
 
-  @Input('ngxTemplate') name! : string;
-
-  constructor(public template: TemplateRef<any>) {
+  constructor(public template: TemplateRef<any>) 
+  {
   }
 
   getType(): string {
